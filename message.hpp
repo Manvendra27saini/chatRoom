@@ -20,6 +20,7 @@ class Message{
         Message(std::string message){
             bodyLength_ = getNewBodyLength(message.size());
             encodeHeader();
+            std::memcpy(data+header,message.c_str(),bodyLength_ );
         }
 
         size_t getNewBodyLength(size_t newLength){
@@ -27,6 +28,31 @@ class Message{
                 return maxBytes;
             }
             return newLength;
+        }
+
+        std:: string getData(){
+            int length=header+bodyLength_;
+            std::string result(data, length);
+            return result;
+        }
+
+        std:: string getBody(){
+            std::string dataString=getData();
+            std::string result =dataString.substr(header,bodyLength_);
+        }
+
+
+        bool decodeHeader(){
+            char newHeader[header+1]="";
+            strncpy(newHeader,data,header);
+            newHeader[header]='\0';
+            int headerValue=atoi(newHeader);
+            if(headerValue>maxBytes){
+                bodyLength_ = 0;
+                return false;
+            }
+            bodyLength_=headerValue;
+            return true;
         }
 
         void encodeHeader(){
@@ -39,15 +65,6 @@ class Message{
         char data[header+maxBytes];
         size_t bodyLength_;
 };
-
-
-
-
-
-
-
-
-
 
 
 #endif
