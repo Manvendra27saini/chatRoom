@@ -63,5 +63,5 @@ class Message{
 };
 
 
-#endif
+#endif MESSAGE_HPP
 
